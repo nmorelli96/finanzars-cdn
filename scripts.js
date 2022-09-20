@@ -9,7 +9,11 @@ class Fiat extends React.Component {
 				<div id="fiatTitle">Dólar Fiat</div>
 				<table id="fiatTable">
 					<thead>
-						<th>Tipo</th>
+						<th
+							title={new Date(fiat.time * 1000).toLocaleString('es-AR')}
+							style={{ color: new Date().getTime() - (fiat.time * 1000) > 3600000 ? 'red' : 'green' }}>
+							{new Date(fiat.time * 1000).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}
+						</th>
 						<th>Venta</th>
 					</thead>
 					<tbody>
@@ -28,7 +32,7 @@ class Fiat extends React.Component {
 						<tr>
 							<td>CCL</td><td>{fiat.ccl.toFixed(2)}</td>
 						</tr>
-						
+
 					</tbody>
 				</table>
 			</div>
@@ -79,7 +83,7 @@ class Bancos extends React.Component {
 									Venta <i class="fa-solid fa-sort fa-xs"></i>
 								</button>
 							</th>
-							<th><button style={{cursor: 'default'}}>Hora</button></th>
+							<th><button style={{ cursor: 'default' }}>Hora</button></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -88,7 +92,11 @@ class Bancos extends React.Component {
 								<td>{banco.banco.toUpperCase()}</td>
 								<td>{banco.compra.toFixed(2)}</td>
 								<td>{banco.ventaTot.toFixed(2)}</td>
-								<td>{new Date(banco.time * 1000).toLocaleTimeString('es-AR')}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}</td>
+								<td
+									title={new Date(banco.time * 1000).toLocaleString('es-AR')}
+									style={{ color: new Date().getTime() - (banco.time * 1000) > 3600000 ? 'red' : 'green' }}>
+									{new Date(banco.time * 1000).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}
+								</td>
 							</tr>
 						))}
 						<tr>
@@ -191,6 +199,19 @@ class App extends React.Component {
 				console.error(error);
 			});
 	}
+	
+	// getBinanceP2PFromAPI() {
+	// 	return fetch('https://criptoya.com/api/binancep2p/buy/usdt/ars/20')
+	// 		.then((response) => response.json())
+	// 		.then((responseJson) => {
+	// 			this.setState((state) => ({
+	// 			}));
+	// 			console.log(this.state);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error(error);
+	// 		});
+	// }
 
 	sortByEntidad() {
 		if (this.state.sortConfig.key === 'banco' && this.state.sortConfig.direction === 'ascending') {
@@ -227,19 +248,6 @@ class App extends React.Component {
 			})
 		}
 	}
-
-	// getBinanceP2PFromAPI() {
-	// 	return fetch('https://criptoya.com/api/binancep2p/buy/usdt/ars/20')
-	// 		.then((response) => response.json())
-	// 		.then((responseJson) => {
-	// 			this.setState((state) => ({
-	// 			}));
-	// 			console.log(this.state);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error(error);
-	// 		});
-	// }
 
 	render() {
 		return (
