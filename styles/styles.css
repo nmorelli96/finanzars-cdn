@@ -1,0 +1,58 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+#app-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#fiatContainer, #bancosContainer {
+  margin: 20px;
+}
+
+#fiatTitle, #bancosTitle {
+  text-align: center;
+}
+
+#fiatGrid, #bancosGrid {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+}
+
+table > thead > tr > th > button {
+  border: none;
+  background-color: white;
+}
+
+#bancosHeader {
+  border-top-width: 0 !important;
+}
+
+th {
+  font-weight: 400;
+}
+th button {
+  width: 100%;
+}
+
+tr {
+  border-collapse: collapse;
+  border-top-width: 1px !important;
+}
+
+td {
+  text-align: center;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #dfdfdf;
+}
+
+tbody td:nth-child(1) {
+  text-align: left;
+}/*# sourceMappingURL=styles.css.map */
