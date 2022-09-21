@@ -11,11 +11,11 @@ body {
   flex-direction: row;
 }
 
-#fiatContainer, #bancosContainer {
+#fiatContainer, #bancosContainer, #cryptoContainer {
   margin: 10px;
 }
 
-#fiatTitle, #bancosTitle {
+#fiatTitle, #bancosTitle, #cryptoTitle {
   text-align: center;
 }
 
@@ -29,7 +29,7 @@ table > thead > tr > th > button {
   padding-right: 7px;
 }
 
-#bancosHeader {
+#fiatHeader, #bancosHeader, #cryptoHeader {
   border-top-width: 0 !important;
 }
 
