@@ -9,12 +9,14 @@ class Fiat extends React.Component {
 				<div id="fiatTitle">Dólar Fiat</div>
 				<table id="fiatTable">
 					<thead>
-						<th
-							title={new Date(fiat.time * 1000).toLocaleString('es-AR')}
-							style={{ color: new Date().getTime() - (fiat.time * 1000) > 3600000 ? 'red' : 'green' }}>
-							{new Date(fiat.time * 1000).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}
-						</th>
-						<th>Venta</th>
+						<tr id="fiatHeader">
+							<th
+								title={new Date(fiat.time * 1000).toLocaleString('es-AR')}
+								style={{ color: new Date().getTime() - (fiat.time * 1000) > 3600000 ? 'red' : 'green' }}>
+								{new Date(fiat.time * 1000).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' })}
+							</th>
+							<th>Venta</th>
+						</tr>
 					</thead>
 					<tbody>
 						<tr>
@@ -59,7 +61,7 @@ class Bancos extends React.Component {
 				}
 				return 0;
 			});
-			console.log(sortConfig)
+			//console.log(sortConfig)
 		}
 
 		return (
@@ -95,7 +97,7 @@ class Bancos extends React.Component {
 								<td
 									title={new Date(banco.time * 1000).toLocaleString('es-AR')}
 									style={{ color: new Date().getTime() - (banco.time * 1000) > 3600000 ? 'red' : 'green' }}>
-									{new Date(banco.time * 1000).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}
+									{new Date(banco.time * 1000).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' })}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}
 								</td>
 							</tr>
 						))}
@@ -110,30 +112,45 @@ class Bancos extends React.Component {
 	}
 }
 
-// class Crypto extends React.Component {
-// 	render() {
-// 		return (
-// 			<div id="bancosContainer">
-// 				<div id="bancosTitle">Bancos</div>
-// 				<div id="bancosGrid">
-// 					<div>Plus </div><div>{this.props.plus}</div>
-// 					<div>CambioAR </div><div>{this.props.cambioar}</div>
-// 					<div>Davsa </div><div>{this.props.davsa}</div>
-// 					<div>Brubank </div><div>{this.props.brubank}</div>
-// 					<div>Reba </div><div>{this.props.reba}</div>
-// 					<div>Nación </div><div>{this.props.bna}</div>
-// 					<div>Provincia </div><div>{this.props.bapro}</div>
-// 					<div>Ciudad </div><div>{this.props.ciudad}</div>
-// 					<div>Galicia </div><div>{this.props.galicia}</div>
-// 					<div>BBVA </div><div>{this.props.bbva}</div>
-// 					<div>Santander </div><div>{this.props.santander}</div>
-// 					<div>Macro </div><div>{this.props.macro}</div>
-// 					<div>HSBC </div><div>{this.props.hsbc}</div>
-// 				</div>
-// 			</div>
-// 		);
-// 	}
-// }
+class Crypto extends React.Component {
+	render() {
+		return (
+			<div>
+				<div id="cryptoContainer">
+					<div id="cryptoTitle">Crypto</div>
+					<table id="cryptoTable">
+						<thead>
+							<tr id="cryptoHeader">
+								<th>
+									<button type="button" onClick={() => this.props.sortByEntidad()}>
+										Exchange <i class="fa-solid fa-sort fa-xs"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" onClick={() => this.props.sortByCompra()}>
+										USDT/ARS <i class="fa-solid fa-sort fa-xs"></i>
+									</button>
+								</th>
+								{/*<th>
+									<button type="button" onClick={() => this.props.sortByVenta()}>
+										Venta <i class="fa-solid fa-sort fa-xs"></i>
+									</button>
+		
+								<th><button style={{ cursor: 'default' }}>Hora</button></th></th>*/}
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Binance P2P</td>
+								<td>{this.props.binanceP2P.precio}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		);
+	}
+}
 
 class App extends React.Component {
 	constructor(props) {
@@ -142,6 +159,7 @@ class App extends React.Component {
 		this.state = {
 			fiat: { "oficial": 0, "solidario": 0, "blue": 0, "ccb": 0, "mep": 0, "ccl": 0, "mepgd30": 0, "cclgd30": 0, "time": 0 },
 			bancos: [],
+			binanceP2P: [],
 			sortConfig: { key: null, direction: 'ascending' }
 		};
 		this.componentDidMount = this.componentDidMount.bind(this);
@@ -155,6 +173,7 @@ class App extends React.Component {
 	componentDidMount() {
 		document.addEventListener("DOMContentLoaded", this.getFiatFromAPI());
 		document.addEventListener("DOMContentLoaded", this.getBancosFromAPI());
+		document.addEventListener("DOMContentLoaded", this.getBinanceP2PFromAPI());
 	}
 
 	getFiatFromAPI() {
@@ -164,7 +183,7 @@ class App extends React.Component {
 				this.setState((state) => ({
 					fiat: responseJson
 				}));
-				console.log(this.state);
+				//console.log(this.state);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -188,30 +207,45 @@ class App extends React.Component {
 					})
 				}
 				let filteredApi = newApi.filter(elem => elem.time * 1000 > ((new Date().getTime()) - 432000000))
-				console.log(newApi)
+				//console.log(newApi)
 				this.setState((state) => ({
-					bancos: responseJson,
 					bancos: filteredApi
 				}));
-				console.log(this.state);
+				//console.log(this.state);
 			})
 			.catch((error) => {
 				console.error(error);
 			});
 	}
-	
-	// getBinanceP2PFromAPI() {
-	// 	return fetch('https://criptoya.com/api/binancep2p/buy/usdt/ars/20')
-	// 		.then((response) => response.json())
-	// 		.then((responseJson) => {
-	// 			this.setState((state) => ({
-	// 			}));
-	// 			console.log(this.state);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error(error);
-	// 		});
-	// }
+
+	getBinanceP2PFromAPI() {
+		return fetch('https://criptoya.com/api/binancep2p/buy/usdt/ars/20')
+			.then((response) => response.json())
+			.then((responseJson) => {
+				let api = responseJson.data
+				let keyValue = Object.keys(api);
+				let newApi = []
+				for (let i = 0; i < Object.keys(api).length; i++) {
+					newApi.push({
+						id: i,
+						trader: api[keyValue[i]].advertiser.nickName,
+						traderTipo: api[keyValue[i]].advertiser.userType,
+						metodo: api[keyValue[i]].adv.tradeMethods["0"].tradeMethodName,
+						precio: api[keyValue[i]].adv.price,
+					})
+				}
+				//let filteredApi = newApi.filter(elem => elem.metodo !== "Cash in Person");
+				let filteredApi = newApi.find(elem => !elem.metodo.includes("Cash"))
+				this.setState((state) => ({
+					binanceP2P: filteredApi
+				}));
+				//console.log(newApi);
+				console.log(filteredApi);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
 
 	sortByEntidad() {
 		if (this.state.sortConfig.key === 'banco' && this.state.sortConfig.direction === 'ascending') {
@@ -262,6 +296,9 @@ class App extends React.Component {
 					sortByEntidad={this.sortByEntidad}
 					sortByCompra={this.sortByCompra}
 					sortByVenta={this.sortByVenta} />
+
+				<Crypto
+					binanceP2P={this.state.binanceP2P} />
 
 			</div>
 		);
