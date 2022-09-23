@@ -1,3 +1,17 @@
+function sortComponent(sortConfig, sortedArray) {
+	if (sortConfig !== null) {
+		sortedArray.sort((a, b) => {
+			if (a[sortConfig.key] < b[sortConfig.key]) {
+				return sortConfig.direction === 'ascending' ? -1 : 1;
+			}
+			if (a[sortConfig.key] > b[sortConfig.key]) {
+				return sortConfig.direction === 'ascending' ? 1 : -1;
+			}
+			return 0;
+		});
+	}
+}
+
 class Fiat extends React.Component {
 	// console.log(props);
 	render() {
@@ -51,18 +65,7 @@ class Bancos extends React.Component {
 
 		let sortedBancos = [...bancos]
 
-		if (sortBancosConfig !== null) {
-			sortedBancos.sort((a, b) => {
-				if (a[sortBancosConfig.key] < b[sortBancosConfig.key]) {
-					return sortBancosConfig.direction === 'ascending' ? -1 : 1;
-				}
-				if (a[sortBancosConfig.key] > b[sortBancosConfig.key]) {
-					return sortBancosConfig.direction === 'ascending' ? 1 : -1;
-				}
-				return 0;
-			});
-			//console.log(sortBancosConfig)
-		}
+		sortComponent(sortBancosConfig, sortedBancos);
 
 		return (
 			<div id="bancosContainer">
@@ -125,18 +128,7 @@ class Crypto extends React.Component {
 		let sortedCryptos = [...binance].concat([...cryptos])
 		//console.log(sortedCryptos)
 
-		if (sortCryptoConfig !== null) {
-			sortedCryptos.sort((a, b) => {
-				if (a[sortCryptoConfig.key] < b[sortCryptoConfig.key]) {
-					return sortCryptoConfig.direction === 'ascending' ? -1 : 1;
-				}
-				if (a[sortCryptoConfig.key] > b[sortCryptoConfig.key]) {
-					return sortCryptoConfig.direction === 'ascending' ? 1 : -1;
-				}
-				return 0;
-			});
-			//console.log(sortCryptoConfig)
-		}
+		sortComponent(sortCryptoConfig, sortedCryptos);
 
 		return (
 			<div>
@@ -215,6 +207,7 @@ class App extends React.Component {
 
 	componentDidMount() {
 		document.addEventListener("DOMContentLoaded", this.loadAPIs());
+		document.addEventListener("DOMContentLoaded", this.reloadPage(10));
 	}
 
 	loadAPIs() {
@@ -315,9 +308,9 @@ class App extends React.Component {
 				}
 				//console.log(binance)
 
-					this.setState((state) => ({
-						binance: binance
-					}));
+				this.setState((state) => ({
+					binance: binance
+				}));
 				//console.log(newApi);
 				//console.log(filteredApi);
 			})
@@ -384,6 +377,12 @@ class App extends React.Component {
 		}
 	}
 
+	reloadPage(minutes) {
+		window.setTimeout(function () {
+			location.reload();
+		}, minutes * 60000);
+	}
+
 	render() {
 		return (
 			<div id="app-container">
@@ -394,13 +393,13 @@ class App extends React.Component {
 				<Bancos
 					bancos={this.state.bancos}
 					sortBancosConfig={this.state.sortBancosConfig}
-					sortBancos={this.sortBancos}/>
+					sortBancos={this.sortBancos} />
 
 				<Crypto
 					binance={this.state.binance}
-					cryptos={this.state.cryptos} 
+					cryptos={this.state.cryptos}
 					sortCryptoConfig={this.state.sortCryptoConfig}
-					sortCrypto={this.sortCrypto}/>
+					sortCrypto={this.sortCrypto} />
 
 			</div>
 		);
