@@ -47,21 +47,21 @@ class Bancos extends React.Component {
 
 		const { bancos } = this.props;
 
-		const { sortConfig } = this.props;
+		const { sortBancosConfig } = this.props;
 
 		let sortedBancos = [...bancos]
 
-		if (sortConfig !== null) {
+		if (sortBancosConfig !== null) {
 			sortedBancos.sort((a, b) => {
-				if (a[sortConfig.key] < b[sortConfig.key]) {
-					return sortConfig.direction === 'ascending' ? -1 : 1;
+				if (a[sortBancosConfig.key] < b[sortBancosConfig.key]) {
+					return sortBancosConfig.direction === 'ascending' ? -1 : 1;
 				}
-				if (a[sortConfig.key] > b[sortConfig.key]) {
-					return sortConfig.direction === 'ascending' ? 1 : -1;
+				if (a[sortBancosConfig.key] > b[sortBancosConfig.key]) {
+					return sortBancosConfig.direction === 'ascending' ? 1 : -1;
 				}
 				return 0;
 			});
-			//console.log(sortConfig)
+			//console.log(sortBancosConfig)
 		}
 
 		return (
@@ -71,17 +71,17 @@ class Bancos extends React.Component {
 					<thead>
 						<tr id="bancosHeader">
 							<th>
-								<button type="button" onClick={() => this.props.sortByEntidad()}>
+								<button type="button" onClick={() => this.props.sortBancos('banco')}>
 									Entidad <i class="fa-solid fa-sort fa-xs"></i>
 								</button>
 							</th>
 							<th>
-								<button type="button" onClick={() => this.props.sortByCompra()}>
+								<button type="button" onClick={() => this.props.sortBancos('compra')}>
 									Compra <i class="fa-solid fa-sort fa-xs"></i>
 								</button>
 							</th>
 							<th>
-								<button type="button" onClick={() => this.props.sortByVenta()}>
+								<button type="button" onClick={() => this.props.sortBancos('ventaTot')}>
 									Venta <i class="fa-solid fa-sort fa-xs"></i>
 								</button>
 							</th>
@@ -112,18 +112,31 @@ class Bancos extends React.Component {
 	}
 }
 
+let binance = [];
 class Crypto extends React.Component {
 	render() {
 
 		const {
-			binanceUSDTBuy,
-			binanceUSDTSell,
-			binanceDAIBuy,
-			binanceDAISell,
-			cryptos
+			binance,
+			cryptos,
+			sortCryptoConfig
 		} = this.props;
 
-		let sortedCryptos = [...cryptos]
+		let sortedCryptos = [...binance].concat([...cryptos])
+		//console.log(sortedCryptos)
+
+		if (sortCryptoConfig !== null) {
+			sortedCryptos.sort((a, b) => {
+				if (a[sortCryptoConfig.key] < b[sortCryptoConfig.key]) {
+					return sortCryptoConfig.direction === 'ascending' ? -1 : 1;
+				}
+				if (a[sortCryptoConfig.key] > b[sortCryptoConfig.key]) {
+					return sortCryptoConfig.direction === 'ascending' ? 1 : -1;
+				}
+				return 0;
+			});
+			//console.log(sortCryptoConfig)
+		}
 
 		return (
 			<div>
@@ -133,60 +146,46 @@ class Crypto extends React.Component {
 						<thead>
 							<tr id="cryptoHeader">
 								<th>
-									<button type="button" onClick={() => this.props.sortByEntidad()}>
+									<button type="button" onClick={() => this.props.sortCrypto('banco')}>
 										Exchange <i class="fa-solid fa-sort fa-xs"></i>
 									</button>
 								</th>
 								<th>
-									<button type="button" onClick={() => this.props.sortByVenta()}>
+									<button type="button" onClick={() => this.props.sortCrypto('coin')}>
 										Coin <i class="fa-solid fa-sort fa-xs"></i>
 									</button>
 								</th>
 								<th>
-									<button type="button" onClick={() => this.props.sortByCompra()}>
+									<button type="button" onClick={() => this.props.sortCrypto('compra')}>
 										Compra <i class="fa-solid fa-sort fa-xs"></i>
 									</button>
 								</th>
 								<th>
-									<button type="button" onClick={() => this.props.sortByCompra()}>
+									<button type="button" onClick={() => this.props.sortCrypto('venta')}>
 										Venta <i class="fa-solid fa-sort fa-xs"></i>
 									</button>
 								</th>
 								<th>
-									<button type="button" onClick={() => this.props.sortByCompra()}>
-										Hora <i class="fa-solid fa-sort fa-xs"></i>
+									<button type="button">
+										Hora
 									</button>
 								</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Binance P2P</td>
-								<td>{binanceUSDTBuy.coin}</td>
-								<td>{parseFloat(binanceUSDTSell.precio).toFixed(2)}</td>
-								<td>{parseFloat(binanceUSDTBuy.precio).toFixed(2)}</td>
-								<td>-</td>
-							</tr>
-							<tr>
-								<td>Binance P2P</td>
-								<td>{binanceDAIBuy.coin}</td>
-								<td>{parseFloat(binanceDAISell.precio).toFixed(2)}</td>
-								<td>{parseFloat(binanceDAIBuy.precio).toFixed(2)}</td>
-								<td>-</td>
-							</tr>
 							{sortedCryptos.map(exchange => (
-							<tr key={exchange.id}>
-								<td>{exchange.banco}</td>
-								<td>{exchange.coin}</td>
-								<td>{exchange.compra.toFixed(2)}</td>
-								<td>{exchange.venta.toFixed(2)}</td>
-								<td
-									title={new Date(exchange.time * 1000).toLocaleString('es-AR')}
-									style={{ color: new Date().getTime() - (exchange.time * 1000) > 3600000 ? 'red' : 'green' }}>
-									{new Date(exchange.time * 1000).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' })}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}
-								</td>
-							</tr>
-						))}
+								<tr key={exchange.id}>
+									<td>{exchange.banco}</td>
+									<td>{exchange.coin}</td>
+									<td>{exchange.compra}</td>
+									<td>{exchange.venta}</td>
+									<td
+										title={new Date(exchange.time * 1000).toLocaleString('es-AR')}
+										style={{ color: new Date().getTime() - (exchange.time * 1000) > 3600000 ? 'red' : 'green' }}>
+										{new Date(exchange.time * 1000).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
@@ -195,6 +194,9 @@ class Crypto extends React.Component {
 	}
 }
 
+let binanceDAI = {};
+let binanceUSDT = {};
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -202,16 +204,13 @@ class App extends React.Component {
 		this.state = {
 			fiat: { "oficial": 0, "solidario": 0, "blue": 0, "ccb": 0, "mep": 0, "ccl": 0, "mepgd30": 0, "cclgd30": 0, "time": 0 },
 			bancos: [],
-			binanceUSDTBuy: [],
-			binanceUSDTSell: [],
-			binanceDAIBuy: [],
-			binanceDAISell: [],
+			binance: [],
 			cryptos: [],
-			sortConfig: { key: 'ventaTot', direction: 'ascending' }
+			sortBancosConfig: { key: 'ventaTot', direction: 'ascending' },
+			sortCryptoConfig: { key: 'venta', direction: 'ascending' }
 		};
-		this.sortByEntidad = this.sortByEntidad.bind(this);
-		this.sortByCompra = this.sortByCompra.bind(this);
-		this.sortByVenta = this.sortByVenta.bind(this);
+		this.sortBancos = this.sortBancos.bind(this);
+		this.sortCrypto = this.sortCrypto.bind(this);
 	}
 
 	componentDidMount() {
@@ -221,46 +220,12 @@ class App extends React.Component {
 	loadAPIs() {
 		this.getFiatFromAPI();
 		this.getBancosFromAPI();
-		this.getBinanceP2PFromAPI('buy', 'usdt');
-		this.getBinanceP2PFromAPI('sell', 'usdt')
-		this.getBinanceP2PFromAPI('buy', 'dai');
-		this.getBinanceP2PFromAPI('sell', 'dai');
+		this.getBinanceP2PFromAPI('buy', 'USDT');
+		this.getBinanceP2PFromAPI('sell', 'USDT')
+		this.getBinanceP2PFromAPI('buy', 'DAI');
+		this.getBinanceP2PFromAPI('sell', 'DAI');
 		this.getCryptosFromAPIs();
 	}
-
-	getCryptosFromAPIs() {
-		return Promise.all([
-			fetch('https://criptoya.com/api/belo/usdt/ars').then(resp => resp.json()),
-			fetch('https://criptoya.com/api/buenbit/dai/ars').then(resp => resp.json()),
-			fetch('https://criptoya.com/api/lemoncash/usdt').then(resp => resp.json()),
-			fetch('https://criptoya.com/api/ripio/usdc').then(resp => resp.json()),
-			fetch('https://criptoya.com/api/satoshitango/dai/ars').then(resp => resp.json()),
-		]).then((responseJson) => {
-			let exchanges = ['Belo', 'Buenbit', 'Lemon', 'Ripio', 'SatoshiTango'];
-			let coins = ['USDT', 'DAI', 'USDT', 'USDC', 'DAI'];
-			let api = responseJson;
-			let newApi = [];
-			for (let i = 0; i < Object.keys(api).length; i++) {
-				newApi.push({
-					id: i + 1,
-					banco: exchanges[i],
-					coin: coins[i],
-					compra: api[i].totalBid,
-					venta: api[i].totalAsk,
-					time: api[i].time
-				})
-			}
-			//console.log(newApi)
-			this.setState((state) => ({
-				cryptos: newApi
-			}));
-			//console.log(this.state);
-		})
-			.catch((error) => {
-				console.error(error);
-			});
-	}
-
 
 	getFiatFromAPI() {
 		return fetch('https://criptoya.com/api/dolar')
@@ -315,31 +280,44 @@ class App extends React.Component {
 					newApi.push({
 						id: i,
 						trader: api[keyValue[i]].advertiser.nickName,
+						tradeType: operation,
 						//traderTipo: api[keyValue[i]].advertiser.userType,
 						metodo: api[keyValue[i]].adv.tradeMethods["0"].tradeMethodName,
 						precio: api[keyValue[i]].adv.price,
-						coin: coin.toUpperCase()
+						coin: coin
 					})
 				}
-				//let filteredApi = newApi.filter(elem => elem.metodo !== "Cash in Person");
 				let filteredApi = newApi.find(elem => !elem.metodo.includes("Cash"))
-				if (operation === 'buy' && coin === 'usdt') {
-					this.setState((state) => ({
-						binanceUSDTBuy: filteredApi
-					}));
-				} else if (operation === 'sell' && coin === 'usdt') {
-					this.setState((state) => ({
-						binanceUSDTSell: filteredApi
-					}));
-				} else if (operation === 'buy' && coin === 'dai') {
-					this.setState((state) => ({
-						binanceDAIBuy: filteredApi
-					}));
-				} else if (operation === 'sell' && coin === 'dai') {
-					this.setState((state) => ({
-						binanceDAISell: filteredApi
-					}));
+				if (coin === 'USDT') {
+					binanceUSDT['id'] = 1;
+					binanceUSDT['banco'] = "Binance P2P";
+					binanceUSDT['coin'] = coin;
+					binanceUSDT['time'] = new Date().getTime() / 1000;
+					if (operation === 'buy') {
+						binanceUSDT['venta'] = Number.parseFloat(filteredApi.precio).toFixed(2)
+					} else if (operation === 'sell') {
+						binanceUSDT['compra'] = Number.parseFloat(filteredApi.precio).toFixed(2)
+					}
+				} else if (coin === 'DAI') {
+					binanceDAI['id'] = 2;
+					binanceDAI['banco'] = "Binance P2P";
+					binanceDAI['coin'] = coin;
+					binanceDAI['time'] = new Date().getTime() / 1000;
+					if (operation === 'buy') {
+						binanceDAI['venta'] = Number.parseFloat(filteredApi.precio).toFixed(2)
+					} else if (operation === 'sell') {
+						binanceDAI['compra'] = Number.parseFloat(filteredApi.precio).toFixed(2)
+					}
 				}
+				if (binance.length < 2) {
+					binance.push(binanceUSDT)
+					binance.push(binanceDAI)
+				}
+				//console.log(binance)
+
+					this.setState((state) => ({
+						binance: binance
+					}));
 				//console.log(newApi);
 				//console.log(filteredApi);
 			})
@@ -348,38 +326,60 @@ class App extends React.Component {
 			});
 	}
 
-	sortByEntidad() {
-		if (this.state.sortConfig.key === 'banco' && this.state.sortConfig.direction === 'ascending') {
+	getCryptosFromAPIs() {
+		return Promise.all([
+			fetch('https://criptoya.com/api/belo/usdt/ars').then(resp => resp.json()),
+			fetch('https://criptoya.com/api/buenbit/dai/ars').then(resp => resp.json()),
+			fetch('https://criptoya.com/api/lemoncash/usdt').then(resp => resp.json()),
+			fetch('https://criptoya.com/api/ripio/usdc').then(resp => resp.json()),
+			fetch('https://criptoya.com/api/satoshitango/dai/ars').then(resp => resp.json()),
+		]).then((responseJson) => {
+			let exchanges = ['Belo', 'Buenbit', 'Lemon', 'Ripio', 'SatoshiTango'];
+			let coins = ['USDT', 'DAI', 'USDT', 'USDC', 'DAI'];
+			let api = responseJson;
+			let newApi = [];
+			for (let i = 0; i < Object.keys(api).length; i++) {
+				newApi.push({
+					id: i + 3,
+					banco: exchanges[i],
+					coin: coins[i],
+					compra: api[i].totalBid.toFixed(2),
+					venta: api[i].totalAsk.toFixed(2),
+					time: api[i].time
+				})
+			}
+			this.setState((state) => ({
+				cryptos: newApi
+			}));
+			console.log(newApi)
+			//console.log(this.state);
+		})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
+	sortBancos(by) {
+		if (this.state.sortBancosConfig.key === by && this.state.sortBancosConfig.direction === 'ascending') {
 			this.setState({
-				sortConfig: { key: 'banco', direction: 'descending' }
+				sortBancosConfig: { key: by, direction: 'descending' }
 			})
 		} else {
 			this.setState({
-				sortConfig: { key: 'banco', direction: 'ascending' }
+				sortBancosConfig: { key: by, direction: 'ascending' }
 			})
 		}
 	}
 
-	sortByCompra() {
-		if (this.state.sortConfig.key === 'compra' && this.state.sortConfig.direction === 'descending') {
-			this.setState({
-				sortConfig: { key: 'compra', direction: 'ascending' }
-			})
-		} else {
-			this.setState({
-				sortConfig: { key: 'compra', direction: 'descending' }
-			})
-		}
-	}
 
-	sortByVenta() {
-		if (this.state.sortConfig.key === 'ventaTot' && this.state.sortConfig.direction === 'ascending') {
+	sortCrypto(by) {
+		if (this.state.sortCryptoConfig.key === by && this.state.sortCryptoConfig.direction === 'ascending') {
 			this.setState({
-				sortConfig: { key: 'ventaTot', direction: 'descending' }
+				sortCryptoConfig: { key: by, direction: 'descending' }
 			})
 		} else {
 			this.setState({
-				sortConfig: { key: 'ventaTot', direction: 'ascending' }
+				sortCryptoConfig: { key: by, direction: 'ascending' }
 			})
 		}
 	}
@@ -393,17 +393,14 @@ class App extends React.Component {
 
 				<Bancos
 					bancos={this.state.bancos}
-					sortConfig={this.state.sortConfig}
-					sortByEntidad={this.sortByEntidad}
-					sortByCompra={this.sortByCompra}
-					sortByVenta={this.sortByVenta} />
+					sortBancosConfig={this.state.sortBancosConfig}
+					sortBancos={this.sortBancos}/>
 
 				<Crypto
-					binanceUSDTBuy={this.state.binanceUSDTBuy}
-					binanceUSDTSell={this.state.binanceUSDTSell}
-					binanceDAIBuy={this.state.binanceDAIBuy}
-					binanceDAISell={this.state.binanceDAISell} 
-					cryptos={this.state.cryptos}/>
+					binance={this.state.binance}
+					cryptos={this.state.cryptos} 
+					sortCryptoConfig={this.state.sortCryptoConfig}
+					sortCrypto={this.sortCrypto}/>
 
 			</div>
 		);
