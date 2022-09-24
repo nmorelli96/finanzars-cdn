@@ -20,14 +20,14 @@ class Fiat extends React.Component {
 
 		return (
 			<div id="fiatContainer">
-				<div id="fiatTitle">Dólar Fiat</div>
+				<div id="fiatTitle">Dólar</div>
 				<table id="fiatTable">
 					<thead>
 						<tr id="fiatHeader">
 							<th
 								title={new Date(fiat.time * 1000).toLocaleString('es-AR')}
 								style={{ color: new Date().getTime() - (fiat.time * 1000) > 3600000 ? 'red' : 'green' }}>
-								{new Date(fiat.time * 1000).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' })}
+								{new Date(fiat.time * 1000).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
 							</th>
 							<th><button style={{ cursor: 'default' }}>Venta</button></th>
 						</tr>
@@ -100,7 +100,7 @@ class Bancos extends React.Component {
 								<td
 									title={new Date(banco.time * 1000).toLocaleString('es-AR')}
 									style={{ color: new Date().getTime() - (banco.time * 1000) > 3600000 ? 'red' : 'green' }}>
-									{new Date(banco.time * 1000).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' })}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}
+									{new Date(banco.time * 1000).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}{/*, {new Date(banco.time * 1000).toLocaleDateString('es-AR')}*/}
 								</td>
 							</tr>
 						))}
@@ -207,7 +207,7 @@ class App extends React.Component {
 
 	componentDidMount() {
 		document.addEventListener("DOMContentLoaded", this.loadAPIs());
-		document.addEventListener("DOMContentLoaded", this.reloadPage(10));
+		document.addEventListener("DOMContentLoaded", this.reloadPageEvery(10));
 	}
 
 	loadAPIs() {
@@ -344,7 +344,7 @@ class App extends React.Component {
 			this.setState((state) => ({
 				cryptos: newApi
 			}));
-			console.log(newApi)
+			//console.log(newApi)
 			//console.log(this.state);
 		})
 			.catch((error) => {
@@ -377,7 +377,7 @@ class App extends React.Component {
 		}
 	}
 
-	reloadPage(minutes) {
+	reloadPageEvery(minutes) {
 		window.setTimeout(function () {
 			location.reload();
 		}, minutes * 60000);
